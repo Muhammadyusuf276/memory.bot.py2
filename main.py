@@ -31,7 +31,8 @@ async def main():
     # Bot menyusiga komandalar qo'shish
     await bot.set_my_commands([
         BotCommand(command="start", description="🏠 Bosh menyu"),
-        BotCommand(command="help", description="❓ Yordam")
+        BotCommand(command="help", description="❓ Yordam"),
+        BotCommand(command="myid", description="🆔 Telegram ID")
     ])
 
     storage = MemoryStorage()

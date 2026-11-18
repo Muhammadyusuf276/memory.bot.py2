@@ -127,6 +127,12 @@ async def handle_photo(message: Message, state: FSMContext):
     await _handle_file_upload(message, state, "photo")
 
 
+@router.message(FolderStates.uploading_file, F.document)
+async def handle_document(message: Message, state: FSMContext):
+    """Rasm/video fayl ko'rinishida yuborilsa ham saqlash."""
+    await _handle_file_upload(message, state, "document")
+
+
 @router.message(FolderStates.uploading_file, F.video)
 async def handle_video(message: Message, state: FSMContext):
     """Video qabul qilish."""
@@ -172,9 +178,12 @@ async def _handle_file_upload(message: Message, state: FSMContext, file_type: st
     if file_type == "photo":
         file = message.photo[-1]
         default_name = f"Rasm {datetime.now().strftime('%d.%m.%Y')}"
-    else:
+    elif file_type == "video":
         file = message.video
         default_name = f"Video {datetime.now().strftime('%d.%m.%Y')}"
+    else:
+        file = message.document
+        default_name = file.file_name or f"Fayl {datetime.now().strftime('%d.%m.%Y')}"
 
     file_id = file.file_id
 
@@ -190,7 +199,7 @@ async def _handle_file_upload(message: Message, state: FSMContext, file_type: st
         channel_msg_id = channel_msg.message_id
     except Exception:
         logger.exception("Kanalga fayl yuborib bo'lmadi")
-        await message.answer("❌ Fayl kanalga saqlanmadi. Keyinroq qayta urinib ko'ring.")
+        await message.answer("❌ Fayl kanalga saqlanmadi. Railway Variables dagi DB_CHANNEL_ID va botning kanalga post yuborish huquqini tekshiring. Admin /checkchannel buyrug‘ini ishlatsin.")
         return
 
     # Saqlash

@@ -272,10 +272,12 @@ async def show_folder_contents(callback: CallbackQuery, folder_id: str, folder: 
                     await callback.message.answer_photo(
                         photo=file_id, caption=caption, parse_mode="Markdown",
                     )
-                else:
+                elif file_info.get("type") == "video":
                     await callback.message.answer_video(
                         video=file_id, caption=caption, parse_mode="Markdown",
                     )
+                else:
+                    await callback.message.answer_document(document=file_id, caption=caption, parse_mode="Markdown")
                 sent_count += 1
             else:
                 failed_count += 1
