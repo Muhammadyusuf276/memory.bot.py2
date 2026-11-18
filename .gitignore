@@ -1,0 +1,6 @@
+memory_vault_data.json
+memory_vault_storage/
+venv/
+.env
+__pycache__/
+*.pyc
